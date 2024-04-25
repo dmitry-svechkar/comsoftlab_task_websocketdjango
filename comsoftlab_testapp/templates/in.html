@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Письма</title>
+<style>
+table {
+  width: 100%;
+}
+
+td {
+  text-align: center;
+}
+
+td:last-child {
+  width: 33.33%;
+}
+</style>
+</head>
+<body>
+
+<button id="get-mail-button">Обновить</button>
+
+<table id="mail-table">
+  <thead>
+    <tr>
+      <th>UID</th>
+      <th>Дата отправки</th>
+      <th>Дата получения</th>
+      <th>Отправитель</th>
+      <th>Тема</th>
+      <th>Текст письма</th>
+      <th>Вложенный файл</th>
+    </tr>
+  </thead>
+  <tbody>
+    <div class="col-lg-4 col-md-6 col-3">
+    {% for mail in mails|dictsortreversed:"date_received" %}
+    <tr>
+      <td>{{mail.uid}}</td>
+      <td>{{mail.date_time_sent}}</td>
+      <td>{{mail.date_received}}</td>
+      <td>{{mail.mail_from}}</td>
+      <td>{{mail.subject}}</td>
+      <td>{{mail.body| truncatewords:10 }}</td>
+      <td><a href="{{ mail.mails.file.file_url }}">Скачать файл</a></td>
+    </tr>
+  </div>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+  const getMailButton = document.getElementById('get-mail-button');
+  const socket = new WebSocket('ws://127.0.0.1:8000/ws/mail/');
+
+  socket.onopen = function() {
+    console.log('Соединение WebSocket установлено.');
+  };
+
+  socket.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+
+    const newRow = document.createElement('tr');
+
+    const uidCell = document.createElement('td');
+    uidCell.textContent = data.uid;
+
+    const dateSentCell = document.createElement('td');
+    dateSentCell.textContent = data.date_time_sent;
+
+    const dateReceivedCell = document.createElement('td');
+    dateReceivedCell.textContent = data.date_received;
+
+    const fromCell = document.createElement('td');
+    fromCell.textContent = data.mail_from;
+
+    const subjectCell = document.createElement('td');
+    subjectCell.textContent = data.subject;
+
+    const bodyCell = document.createElement('td');
+    bodyCell.textContent = data.body;
+    bodyCell.style.textAlign = 'left';
+
+    newRow.appendChild(uidCell);
+    newRow.appendChild(dateSentCell);
+    newRow.appendChild(dateReceivedCell);
+    newRow.appendChild(fromCell);
+    newRow.appendChild(subjectCell);
+    newRow.appendChild(bodyCell);
+
+    tableBody.appendChild(newRow);
+  };
+
+  getMailButton.addEventListener('click', function() {
+    socket.send(JSON.stringify({ 'message': 'get_mail' }));
+  });
+
+  setInterval(() => {
+    socket.send(JSON.stringify({ 'message': 'get_mail' }));
+  }, 5000);
+  setInterval(() => {
+    location.reload();
+  }, 5000);
+</script>
+</body>
+</html>
