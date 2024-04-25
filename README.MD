@@ -37,4 +37,9 @@ IMAP_PASSWORD=pass_out_app
 python manage.py migrate
 python manage.py runserver
 ```
+###### страница будет доступна по адресу:
+```
+http://127.0.0.1:8000/get_mail/
+```
+
 
