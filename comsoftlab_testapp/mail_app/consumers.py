@@ -9,7 +9,7 @@ from mail_app.models import Mail, MailFiles
 
 load_dotenv()
 
-IMAP_HOST = os.getenv('SECRET_KEY')
+IMAP_HOST = 'imap.mail.ru'  # IMAP хост mail.ru
 IMAP_USER = os.getenv('IMAP_USER')
 IMAP_PASSWORD = os.getenv('IMAP_PASSWORD')
 
