@@ -32,6 +32,13 @@ IMAP_HOST=imap.setting.ru
 IMAP_USER=mail_user
 IMAP_PASSWORD=pass_out_app
 ```
+###### создать окружение и установить зависимости
+```
+cd comsoftlab_testapp/
+python -m venv venv
+source venv/bin/activate
+pip instll -r requirements.txt
+```
 ###### Запустить проект на Daphne
 ```
 python manage.py migrate
