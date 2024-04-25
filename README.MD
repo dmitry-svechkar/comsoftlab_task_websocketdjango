@@ -23,7 +23,6 @@
  - Подключен и настроен ASGI.
 
  ###### Создать в директории сomsoftlab_testapp файл .env c указанием переменных.
-###### при DEBUG = True, sqlite3
 
 ```
 SECRET_KEY=django-insecure-code
